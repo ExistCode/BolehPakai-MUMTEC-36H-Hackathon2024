@@ -54,7 +54,7 @@ def index():
             "test_cases": "Not specified"
         })
 
-        # Render the result to the HTML template
+        # Render the result to the HTML template and pass the data
         return render_template('index.html', details=details, suggestion=suggestion)
 
     return render_template('index.html')

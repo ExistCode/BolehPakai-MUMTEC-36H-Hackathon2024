@@ -4,18 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    <title>Document</title>
+    <title>Code Analysis Tool</title>
 </head>
 <body>
     <div class="flex flex-row">
+        <!-- Sidebar -->
         <div class="flex flex-col" id="sideBar">
-            <img src="../assets/images/logo.png" alt="">
+            <img src="../assets/images/logo.png" alt="Logo">
         </div>
-        <div class="flex flex-col" id="codeInputArea">
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+
+        <!-- Code Input Area -->
+        <div class="flex flex-col p-4" id="codeInputArea">
+            <form method="post">
+                <textarea name="code_snippet" id="codeSnippetInput" cols="30" rows="10" placeholder="Enter your code here..."></textarea>
+                <button type="submit" class="mt-2 p-2 bg-blue-500 text-white">Analyze Code</button>
+            </form>
         </div>
-        <div class="flex flex-col" id="issuesAndSuggestionsArea">
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+
+        <!-- Issues and Suggestions Area -->
+        <div class="flex flex-col p-4" id="issuesAndSuggestionsArea">
+            {% if suggestion %}
+                <h2 class="text-xl font-bold">Analysis Report</h2>
+                <p><strong>Suggestion:</strong> {{ suggestion }}</p>
+                <p><strong>Issue Type:</strong> {{ details.issue_type }}</p>
+                <p><strong>Issue Description:</strong> {{ details.issue_description }}</p>
+                <p><strong>Optimized Code:</strong> {{ details.optimized_code }}</p>
+                <p><strong>Potential Impact:</strong> {{ details.impact }}</p>
+                <p><strong>Complexity:</strong> {{ details.complexity }}</p>
+                <p><strong>Runtime Estimate:</strong> {{ details.runtime_estimate }}</p>
+                <p><strong>Memory Estimate:</strong> {{ details.memory_estimate }}</p>
+                <p><strong>Alternative Approaches:</strong> {{ details.alternative_approaches }}</p>
+                <p><strong>Required Libraries:</strong> {{ details.required_libraries }}</p>
+                <p><strong>Hardware Constraints:</strong> {{ details.hardware_constraints }}</p>
+                <p><strong>Context Module:</strong> {{ details.context_module }}</p>
+                <p><strong>Safety/Security Impact:</strong> {{ details.safety_security_impact }}</p>
+                <p><strong>Edge Cases:</strong> {{ details.edge_cases }}</p>
+                <p><strong>Implementation Notes:</strong> {{ details.implementation_notes }}</p>
+                <p><strong>Estimated Performance Gain:</strong> {{ details.estimated_performance_gain }}</p>
+                <p><strong>Difficulty Level:</strong> {{ details.difficulty_level }}</p>
+                <p><strong>Test Cases:</strong> {{ details.test_cases }}</p>
+            {% endif %}
         </div>
     </div>
 </body>
