@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive VS Code-like UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white h-screen flex flex-col">
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-16 bg-gray-900 flex flex-col items-center py-4">
+            <div class="w-8 h-8 bg-blue-500 rounded mb-4"></div>
+            <div class="w-8 h-8 bg-gray-700 rounded mb-4"></div>
+            <div class="w-8 h-8 bg-gray-700 rounded mb-4"></div>
+        </div>
+        
+        <!-- File Explorer -->
+        <div class="w-64 bg-gray-850 p-4 overflow-y-auto">
+            <h2 class="text-sm uppercase mb-2">Explorer</h2>
+            <ul id="fileList">
+                <li class="mb-1 cursor-pointer" data-file="index.html">📄 index.html</li>
+                <li class="mb-1 cursor-pointer" data-file="styles.css">📄 styles.css</li>
+                <li class="mb-1 cursor-pointer" data-file="script.js">📄 script.js</li>
+            </ul>
+        </div>
+
+        <!-- Main Editor Area -->
+        <div class="flex-1 flex flex-col">
+            <!-- Tabs -->
+            <div id="tabs" class="bg-gray-700 flex"></div>
+            <!-- Code Area -->
+            <div class="flex-1 bg-gray-800 p-4 font-mono text-sm overflow-auto">
+                <textarea id="editor" class="w-full h-full bg-transparent outline-none resize-none" spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <div class="h-32 bg-gray-850 p-4">
+        <h2 class="text-sm uppercase mb-2">Terminal</h2>
+        <div id="terminal" class="font-mono text-sm">
+            $ npm start<br>
+            > Starting development server...<br>
+            > Server running at http://localhost:3000
+        </div>
+    </div>
+
+    <script>
+        const files = {
+            'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <h1>Hello, World!</h1>\n</body>\n</html>',
+            'styles.css': 'body {\n    font-family: Arial, sans-serif;\n    margin: 0;\n    padding: 20px;\n    background-color: #f0f0f0;\n}',
+            'script.js': "console.log('Hello from JavaScript!');\n\nfunction greet(name) {\n    return `Hello, ${name}!`;\n}"
+        };
+
+        let openFiles = [];
+        let activeFile = null;
+
+        function openFile(filename) {
+            if (!openFiles.includes(filename)) {
+                openFiles.push(filename);
+                updateTabs();
+            }
+            setActiveFile(filename);
+        }
+
+        function closeFile(filename) {
+            openFiles = openFiles.filter(f => f !== filename);
+            updateTabs();
+            if (activeFile === filename) {
+                setActiveFile(openFiles[openFiles.length - 1] || null);
+            }
+        }
+
+        function setActiveFile(filename) {
+            activeFile = filename;
+            updateTabs();
+            if (filename) {
+                document.getElementById('editor').value = files[filename];
+            } else {
+                document.getElementById('editor').value = '';
+            }
+        }
+
+        function updateTabs() {
+            const tabsEl = document.getElementById('tabs');
+            tabsEl.innerHTML = '';
+            openFiles.forEach(file => {
+                const tabEl = document.createElement('div');
+                tabEl.className = `px-4 py-2 flex items-center ${file === activeFile ? 'bg-gray-800' : 'bg-gray-700'} cursor-pointer`;
+                tabEl.innerHTML = `
+                    <span class="mr-2">${file}</span>
+                    <button class="text-gray-500 hover:text-white">&times;</button>
+                `;
+                tabEl.querySelector('span').addEventListener('click', () => setActiveFile(file));
+                tabEl.querySelector('button').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeFile(file);
+                });
+                tabsEl.appendChild(tabEl);
+            });
+        }
+
+        document.getElementById('fileList').addEventListener('click', (e) => {
+            if (e.target.dataset.file) {
+                openFile(e.target.dataset.file);
+            }
+        });
+
+        document.getElementById('editor').addEventListener('input', (e) => {
+            if (activeFile) {
+                files[activeFile] = e.target.value;
+            }
+        });
+
+        // Initialize with index.html open
+        openFile('index.html');
+    </script>
+</body>
+</html>
