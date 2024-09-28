@@ -1,4 +1,4 @@
-#!/Users/abdullasafar/Development/BolehPakai-MUMTEC-36H-Hackathon2024/.venv/bin/python3.11
+#!/Users/hansandreanto/Development/mumtec-hackathon/BolehPakai-MUMTEC-36H-Hackathon2024/.venv/bin/python3.11
 # -*- coding: utf-8 -*-
 import re
 import sys
