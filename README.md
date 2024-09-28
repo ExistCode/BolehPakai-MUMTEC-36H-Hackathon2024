@@ -1,7 +1,7 @@
 # Western Digital x MUMTEC-36H-Hackathon 2024-
 # Boleh Pakai – MUMTEC Hackathon 2024 Submission
 
-## Project Title: [Insert Project Name]
+## Project Title: Revo
 
 ### Table of Contents
 1. [Project Overview](#project-overview)
@@ -48,7 +48,6 @@ In summary, "Revo" offers a comprehensive solution to the complexities of embedd
 ---
 
 ### Technologies Used
-[List all the technologies, programming languages, frameworks, libraries, and tools used in the project. Include any external APIs or datasets.]
 
 - Python 3.7
 - HTML
@@ -62,17 +61,13 @@ In summary, "Revo" offers a comprehensive solution to the complexities of embedd
 
 ### Installation and Setup
 Clone the Repository:
-git clone https://github.com/your-username/boeh-pakai.git
+git clone [https://github.com/your-username/boleh-pakai.git](https://github.com/ExistCode/BolehPakai-MUMTEC-36H-Hackathon2024.git)
 
 Navigate to the Project Directory:
 cd revo
 
 Set Up a Virtual Environment:
-python -m venv .venv
 source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
-
-Install Dependencies:
-pip install -r requirements.txt
 
 Set Up the Static Folder:
 Ensure all assets like images are placed in the static/assets/images/ directory.
@@ -84,12 +79,30 @@ The app should now be running on http://127.0.0.1:5000/.
 --- 
 
 ### Usage
-[Describe how to use your application. Include example commands, expected inputs, and outputs.]
+After setting up the application, you can use "Boleh Pakai" to analyze and optimize code:
+
+Open the Application:
+Go to http://127.0.0.1:5000/ in your web browser.
+Paste Code for Analysis:
+Use the text editor on the left side to paste your code snippet.
+Analyze the Code:
+Click the "Analyze Code" button to submit the code for processing.
+View Suggestions:
+The application will display detailed suggestions, including optimization tips, estimated performance gains, and alternative approaches.
 
 --- 
 
 ### Features
-[Highlight the key features of your project.]
+"Revo" provides the following key features to enhance the developer's coding experience:
+
+Code Analysis: Processes code snippets to identify areas of improvement, such as memory usage, runtime inefficiencies, and best practices.
+AI-Powered Suggestions: Utilizes a trained machine learning model to suggest code optimizations tailored to embedded systems.
+Detailed Reports: Provides comprehensive information, including:
+Issue Type: Categorization of the detected issue (e.g., Memory Inefficiency).
+Optimized Code: A suggested code snippet that improves upon the provided code.
+Potential Impact: Details the effect of the suggested change on performance.
+Non-blocking Analysis: The app can accept new code submissions while processing ongoing analyses, thanks to efficient backend handling.
+User-Friendly Interface: Designed using Tailwind CSS for an intuitive and responsive frontend.
 
 --- 
 
