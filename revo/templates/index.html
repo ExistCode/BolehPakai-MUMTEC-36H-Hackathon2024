@@ -6,23 +6,26 @@
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <title>Code Analysis Tool</title>
 </head>
-<body>
-    <div class="flex flex-row">
+<body class="bg-gray-900 text-white">
+    <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="flex flex-col" id="sideBar">
-            <img src="../assets/images/logo.png" alt="Logo">
+        <div class="w-1/8 bg-gray-900 p-6 flex items-start justify-center">
+            <img src="../assets/images/logo.png" class="h-12" alt="Logo">
         </div>
 
         <!-- Code Input Area -->
-        <div class="flex flex-col p-4" id="codeInputArea">
-            <form method="post">
-                <textarea name="code_snippet" id="codeSnippetInput" cols="30" rows="10" placeholder="Enter your code here..."></textarea>
-                <button type="submit" class="mt-2 p-2 bg-blue-500 text-white">Analyze Code</button>
+        <div class="flex-1 flex flex-col">
+            <div class="bg-gray-800 p-8">
+                <h2 class="text-xl font-bold">Editor</h2>
+            </div>
+            <form method="post" class="flex-1 flex flex-col">
+                <textarea name="code_snippet" id="codeSnippetInput" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none" placeholder="Paste your code here..."></textarea>
+                <button type="submit" class="bg-blue-500 text-white p-2 mt-2">Analyze Code</button>
             </form>
         </div>
 
         <!-- Issues and Suggestions Area -->
-        <div class="flex flex-col p-4" id="issuesAndSuggestionsArea">
+        <div class="flex-1 flex flex-col p-4 bg-gray-800">
             {% if suggestion %}
                 <h2 class="text-xl font-bold">Analysis Report</h2>
                 <p><strong>Suggestion:</strong> {{ suggestion }}</p>
