@@ -66,6 +66,9 @@ git clone [https://github.com/your-username/boleh-pakai.git](https://github.com/
 Navigate to the Project Directory:
 cd revo
 
+Install all the dependancies:
+pip install -r requirements.txt
+
 Set Up a Virtual Environment:
 source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
 
