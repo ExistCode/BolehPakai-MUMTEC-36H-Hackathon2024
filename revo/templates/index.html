@@ -10,7 +10,8 @@
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-1/8 bg-gray-900 p-6 flex items-start justify-center">
-            <img src="../assets/images/logo.png" class="h-12" alt="Logo">
+            <!-- Update the image source -->
+        <img src="{{ url_for('static', filename='images/logo.png') }}" class="h-12" alt="Logo">
         </div>
 
         <!-- Code Input Area -->
@@ -19,35 +20,50 @@
                 <h2 class="text-xl font-bold">Editor</h2>
             </div>
             <form method="post" class="flex-1 flex flex-col">
-                <textarea name="code_snippet" id="codeSnippetInput" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none" placeholder="Paste your code here..."></textarea>
+               <textarea name="code_snippet" id="codeSnippetInput" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none" placeholder="Paste your code here...">{{ request.form.get('code_snippet', '') }}</textarea>
                 <button type="submit" class="bg-blue-500 text-white p-2 mt-2">Analyze Code</button>
             </form>
         </div>
 
         <!-- Issues and Suggestions Area -->
-        <div class="flex-1 flex flex-col p-4 bg-gray-800">
-            {% if suggestion %}
-                <h2 class="text-xl font-bold">Analysis Report</h2>
-                <p><strong>Suggestion:</strong> {{ suggestion }}</p>
-                <p><strong>Issue Type:</strong> {{ details.issue_type }}</p>
-                <p><strong>Issue Description:</strong> {{ details.issue_description }}</p>
-                <p><strong>Optimized Code:</strong> {{ details.optimized_code }}</p>
-                <p><strong>Potential Impact:</strong> {{ details.impact }}</p>
-                <p><strong>Complexity:</strong> {{ details.complexity }}</p>
-                <p><strong>Runtime Estimate:</strong> {{ details.runtime_estimate }}</p>
-                <p><strong>Memory Estimate:</strong> {{ details.memory_estimate }}</p>
-                <p><strong>Alternative Approaches:</strong> {{ details.alternative_approaches }}</p>
-                <p><strong>Required Libraries:</strong> {{ details.required_libraries }}</p>
-                <p><strong>Hardware Constraints:</strong> {{ details.hardware_constraints }}</p>
-                <p><strong>Context Module:</strong> {{ details.context_module }}</p>
-                <p><strong>Safety/Security Impact:</strong> {{ details.safety_security_impact }}</p>
-                <p><strong>Edge Cases:</strong> {{ details.edge_cases }}</p>
-                <p><strong>Implementation Notes:</strong> {{ details.implementation_notes }}</p>
-                <p><strong>Estimated Performance Gain:</strong> {{ details.estimated_performance_gain }}</p>
-                <p><strong>Difficulty Level:</strong> {{ details.difficulty_level }}</p>
-                <p><strong>Test Cases:</strong> {{ details.test_cases }}</p>
-            {% endif %}
+       <div class="flex-1 flex flex-col p-4 bg-gray-800">
+    {% if suggestion %}
+        <h2 class="text-lg font-bold mb-4">Analysis Report</h2> <!-- Smaller heading -->
+        <p class="text-sm"><strong>Suggestion:</strong> {{ suggestion }}</p>
+        
+        <!-- Group Issue Type and Description -->
+        <div class="mb-4">
+            <p class="text-sm"><strong>Issue Type:</strong> {{ details.issue_type }}</p>
+            <p class="text-sm"><strong>Issue Description:</strong> {{ details.issue_description }}</p>
         </div>
+        
+        <!-- Optimized Code Section -->
+        <div class="border border-gray-600 rounded p-4 my-4 bg-gray-700">
+            <h3 class="font-semibold text-sm">Optimized Code:</h3> <!-- Smaller subheading -->
+            <pre class="whitespace-pre-wrap text-sm">{{ details.optimized_code }}</pre> <!-- Smaller code text -->
+        </div>
+        
+        <!-- Group Complexity, Runtime, and Memory Estimate -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <p class="text-sm"><strong>Complexity:</strong> {{ details.complexity }}</p>
+            <p class="text-sm"><strong>Runtime Estimate:</strong> {{ details.runtime_estimate }}</p>
+            <p class="text-sm"><strong>Memory Estimate:</strong> {{ details.memory_estimate }}</p>
+        </div>
+
+        <p class="text-sm"><strong>Potential Impact:</strong> {{ details.impact }}</p>
+        
+        <!-- Strong for Security Impact, Edge Cases, and Implementation Notes -->
+        <div class="mt-4">
+            <p class="text-sm"><strong>Safety/Security Impact:</strong> <span class="font-bold">{{ details.safety_security_impact }}</span></p>
+            <p class="text-sm"><strong>Edge Cases:</strong> <span class="font-bold">{{ details.edge_cases }}</span></p>
+            <p class="text-sm"><strong>Implementation Notes:</strong> <span class="font-bold">{{ details.implementation_notes }}</span></p>
+        </div>
+
+        <p class="text-sm"><strong>Estimated Performance Gain:</strong> {{ details.estimated_performance_gain }}</p>
+        <p class="text-sm"><strong>Difficulty Level:</strong> {{ details.difficulty_level }}</p>
+        <p class="text-sm"><strong>Test Cases:</strong> {{ details.test_cases }}</p>
+    {% endif %}
+</div>
     </div>
 </body>
 </html>
