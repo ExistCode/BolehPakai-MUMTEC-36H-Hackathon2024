@@ -50,7 +50,7 @@
 --- 
 
 ### Architecture
-[Provide an explanation of your system architecture.]
+![architectural-diagram drawio](https://github.com/user-attachments/assets/374ed45a-a4a6-4892-88e0-8377fed74825)
 
 --- 
 
