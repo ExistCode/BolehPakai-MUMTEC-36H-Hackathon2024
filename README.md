@@ -82,14 +82,17 @@ The app should now be running on http://127.0.0.1:5000/.
 --- 
 
 ### Usage
-After setting up the application, you can use "Boleh Pakai" to analyze and optimize code:
+After setting up the application, you can use "Revo" to analyze and optimize code:
 
 Open the Application:
 Go to http://127.0.0.1:5000/ in your web browser.
+
 Paste Code for Analysis:
 Use the text editor on the left side to paste your code snippet.
+
 Analyze the Code:
 Click the "Analyze Code" button to submit the code for processing.
+
 View Suggestions:
 The application will display detailed suggestions, including optimization tips, estimated performance gains, and alternative approaches.
 
