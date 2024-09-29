@@ -21,7 +21,7 @@ def mask_sensitive_data(text):
 
 def analyze_code_with_openai(code_snippet):
     try:
-        client = OpenAI(api_key='openaikey')
+        client = OpenAI(api_key='openai-api-key')
 
         # Mask the code snippet before sending
         masked_code = mask_sensitive_data(code_snippet)
