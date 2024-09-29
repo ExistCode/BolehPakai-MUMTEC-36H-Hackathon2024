@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <title>Code Analysis Tool</title>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-1/8 bg-gray-900 p-6 flex items-start justify-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" class="h-12" alt="Logo">
+        </div>
+
+        <!-- Code Input Area -->
+        <div class="flex-1 flex flex-col">
+            <div class="bg-gray-800 p-8">
+                <h2 class="text-xl font-bold">Editor</h2>
+            </div>
+            <form method="post" class="flex-1 flex flex-col">
+                <textarea name="code_snippet" id="codeSnippetInput" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none" placeholder="Paste your code here...">{{ request.form.get('code_snippet', '') }}</textarea>
+                <button type="submit" class="bg-blue-500 text-white p-2 mt-2">Analyze Code</button>
+            </form>
+        </div>
+
+        <!-- Issues and Suggestions Area -->
+        <div class="flex-1 flex flex-col p-4 bg-gray-800">
+            {% if result %}
+                {% if result == "Invalid input: Only code snippets are accepted." %}
+                    <div class="bg-red-500 p-4 rounded mb-6">
+                        {{ result }}
+                    </div>
+                {% else %}
+                    <h2 class="text-lg font-bold mb-4">Analysis Report</h2>
+                    <p class="text-sm"><strong>Number of Issues Found:</strong> {{ result.num_issues }}</p>
+                    
+                    {% for issue in result.issues %}
+                        <div class="bg-gray-700 p-4 rounded mb-4">
+                            <h3 class="text-lg font-semibold">Issue at Line {{ issue[0] }}</h3>
+                            <p><strong>Original Code:</strong> {{ issue[2] }}</p>
+                            <p><strong>Issue Type:</strong> {{ issue[1].issue_type }}</p>
+                            <p><strong>Description:</strong> {{ issue[1].issue_description }}</p>
+                            <p><strong>Suggestion:</strong> {{ issue[1].suggestion }}</p>
+                            <p><strong>Complexity:</strong> {{ issue[1].complexity }}</p>
+                            <p><strong>Runtime Estimate:</strong> {{ issue[1].runtime_estimate }}</p>
+                            <p><strong>Memory Estimate:</strong> {{ issue[1].memory_estimate }}</p>
+                            <p><strong>Safety/Security Impact:</strong> {{ issue[1].safety_security_impact }}</p>
+                            <p><strong>Estimated Performance Gain:</strong> {{ issue[1].estimated_performance_gain }}</p>
+                        </div>
+                    {% endfor %}
+                    
+                    <h2 class="text-lg font-bold mb-4">Optimized Code</h2>
+                    <pre class="bg-gray-700 p-4 rounded">{{ result.optimized_code }}</pre>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -4,66 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    <title>Code Analysis Tool</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0; 
+        }
+        body {
+            background-image: url('{{ url_for("static", filename="images/splash-screen.png") }}');
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center center; 
+        }
+    </style>
+    <title>Document</title>
 </head>
-<body class="bg-gray-900 text-white">
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-1/8 bg-gray-900 p-6 flex items-start justify-center">
-            <!-- Update the image source -->
-        <img src="{{ url_for('static', filename='images/logo.png') }}" class="h-12" alt="Logo">
-        </div>
-
-        <!-- Code Input Area -->
-        <div class="flex-1 flex flex-col">
-            <div class="bg-gray-800 p-8">
-                <h2 class="text-xl font-bold">Editor</h2>
-            </div>
-            <form method="post" class="flex-1 flex flex-col">
-               <textarea name="code_snippet" id="codeSnippetInput" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none" placeholder="Paste your code here...">{{ request.form.get('code_snippet', '') }}</textarea>
-                <button type="submit" class="bg-blue-500 text-white p-2 mt-2">Analyze Code</button>
-            </form>
-        </div>
-
-        <!-- Issues and Suggestions Area -->
-       <div class="flex-1 flex flex-col p-4 bg-gray-800">
-    {% if suggestion %}
-        <h2 class="text-lg font-bold mb-4">Analysis Report</h2> <!-- Smaller heading -->
-        <p class="text-sm"><strong>Suggestion:</strong> {{ suggestion }}</p>
-        
-        <!-- Group Issue Type and Description -->
-        <div class="mb-4">
-            <p class="text-sm"><strong>Issue Type:</strong> {{ details.issue_type }}</p>
-            <p class="text-sm"><strong>Issue Description:</strong> {{ details.issue_description }}</p>
-        </div>
-        
-        <!-- Optimized Code Section -->
-        <div class="border border-gray-600 rounded p-4 my-4 bg-gray-700">
-            <h3 class="font-semibold text-sm">Optimized Code:</h3> <!-- Smaller subheading -->
-            <pre class="whitespace-pre-wrap text-sm">{{ details.optimized_code }}</pre> <!-- Smaller code text -->
-        </div>
-        
-        <!-- Group Complexity, Runtime, and Memory Estimate -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <p class="text-sm"><strong>Complexity:</strong> {{ details.complexity }}</p>
-            <p class="text-sm"><strong>Runtime Estimate:</strong> {{ details.runtime_estimate }}</p>
-            <p class="text-sm"><strong>Memory Estimate:</strong> {{ details.memory_estimate }}</p>
-        </div>
-
-        <p class="text-sm"><strong>Potential Impact:</strong> {{ details.impact }}</p>
-        
-        <!-- Strong for Security Impact, Edge Cases, and Implementation Notes -->
-        <div class="mt-4">
-            <p class="text-sm"><strong>Safety/Security Impact:</strong> <span class="font-bold">{{ details.safety_security_impact }}</span></p>
-            <p class="text-sm"><strong>Edge Cases:</strong> <span class="font-bold">{{ details.edge_cases }}</span></p>
-            <p class="text-sm"><strong>Implementation Notes:</strong> <span class="font-bold">{{ details.implementation_notes }}</span></p>
-        </div>
-
-        <p class="text-sm"><strong>Estimated Performance Gain:</strong> {{ details.estimated_performance_gain }}</p>
-        <p class="text-sm"><strong>Difficulty Level:</strong> {{ details.difficulty_level }}</p>
-        <p class="text-sm"><strong>Test Cases:</strong> {{ details.test_cases }}</p>
-    {% endif %}
-</div>
-    </div>
+<body>
+    <a href="{{ url_for('home') }}" 
+        class="px-8 py-3 bg-gradient-to-r from-gray-300 to-gray-500 text-black 
+            font-semibold rounded-full shadow-lg hover:from-gray-400 hover:to-gray-600
+            absolute bottom-0 left-0 ml-25 mb-25">
+        Start Now
+    </a>
 </body>
 </html>

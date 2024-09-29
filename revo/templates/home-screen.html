@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <title>Code Analysis Tool</title>
+     <style>
+        /* Custom styles to match the background */
+        .CodeMirror {
+            
+            background-color: #1f2937; /* Tailwind's gray-800 */
+            color: white; /* Text color */
+        }
+        /* Ensure the editor takes full height and is scrollable */
+        #codeEditor {
+            max-height: 92vh; /* Adjust based on your layout */
+            overflow: auto; /* Enable scrolling */
+        }
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .custom-button {
+            width: 150px;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+        }
+        .custom-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-1/8 bg-gray-900 p-6 flex items-start justify-center">
+            <!-- Update the image source -->
+        <img src="{{ url_for('static', filename='images/logo.png') }}" class="h-12" alt="Logo">
+        </div>
+
+         <!-- Code Input Area -->
+        <div class="flex-1 flex flex-col relative">
+            <div class="bg-gray-800 p-8">
+                <h2 class="text-xl font-bold">Editor</h2>
+            </div>
+            <form method="post" class="flex-1 flex flex-col">
+                 <div id="codeEditor" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none"></div>
+                <textarea name="code_snippet" id="codeSnippetInput" style="display:none;">{{ request.form.get('code_snippet', '') }}</textarea>
+                <!-- Button -->
+               <!-- <button type="submit" class="bg-gradient-to-r from-white to-white-10 text-white p-2 rounded absolute ">Analyze Code</button> -->
+                
+                <div class="button-container">
+                    <button type="submit" class="custom-button bg-gradient-to-r from-white to-white-100 text-black py-2 px-4 shadow-lg">Analyze Code</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Issues and Suggestions Area -->
+       <div class="flex-1 flex flex-col p-4 bg-gray-800">
+        {% if result %}
+            {% if result.error %}
+                <div class="bg-red-500 p-4 rounded mb-6">{{ result.error }}</div>
+            {% else %}
+                <h2 class="text-xl font-bold mb-4 mt-4 underline">Code Analysis Report</h2> <!-- Smaller heading -->
+                <div class="flex flex-row space-x-4 mb-4"> <!-- Main container for both sections -->
+                    <div class="flex-1 rounded border border-gray-500 p-4" style="background-color: rgba(255, 255, 255, 0.1);"> <!-- Suggestion section -->
+                        <h3 class="font-bold text-sm mb-2">Suggestion</h3>
+                        <p class="text-sm">{{ result.suggestion }}</p>
+                    </div>
+                    
+                    <div class="flex-1 bg-gray-600 rounded border border-gray-500 p-4" style="background-color: rgba(255, 255, 255, 0.1);"> <!-- Issue section -->
+                        <h3 class="font-bold text-sm mb-2">Issue</h3>
+                        <p class="text-sm"><strong>Issue Type:</strong> {{ result.issue_type }}</p>
+                        <p class="text-sm"><strong>Description:</strong> {{ result.description }}</p>
+                    </div>
+                </div>
+        
+                
+        <!-- Optimized Code Section -->
+        <div class="border border-gray-700 rounded-md overflow-hidden my-4">
+            <div class="bg-gray-800 px-4 py-2 flex justify-between items-center">
+                <span class="text-gray-400 text-sm">Optimized Code</span>
+                <button onclick="copyToClipboard()" class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm hover:bg-gray-600">Copy code</button>
+            </div>
+            <div class="bg-gray-900 p-4 overflow-x-auto">
+                <pre><code class="language-cpp text-sm">{{ result.optimzed_code }}</code></pre>
+            </div>
+        </div>
+        
+        <!-- Group Complexity, Runtime, and Memory Estimate -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-3 md:col-span-1">
+            <p class="text-sm mb-1"><strong>Complexity:</strong> <span id="complexityValue">{{result.complexity}}</span></p>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div id="complexityBar" class="bg-orange-500 w-2/3 h-2.5 rounded-full"></div>
+            </div>
+        </div>
+            <p class="text-sm"><strong>Runtime Estimate:</strong> {{ result.runtime_estimate }}</p>
+            <p class="text-sm"><strong>Memory Estimate:</strong> {{ result.memory_estimate }}</p>
+        </div>
+
+        <!-- <p class="text-sm"><strong>Potential Impact:</strong> {{ result.impact }}</p> -->
+        
+        <!-- Strong for Security Impact, Edge Cases, and Implementation Notes -->
+        <div class="mt-4">
+            <p class="text-sm"><strong>Safety/Security Impact:</strong> <span class="font-bold">{{ result.safety_security_impact }}</span></p>
+            <!-- <p class="text-sm"><strong>Edge Cases:</strong> <span class="font-bold">{{ result.edge_cases }}</span></p> -->
+            <p class="text-sm"><strong>Implementation Notes:</strong> <span class="font-bold">{{ result.implementation_notes }}</span></p>
+        </div>
+
+        <p class="text-sm"><strong>Estimated Performance Gain:</strong> {{ result.estimated_performance_gain }}</p>
+        <p class="text-sm"><strong>Difficulty Level:</strong> {{ result.difficulty_level }}</p>
+        <!-- <p class="text-sm"><strong>Test Cases:</strong> {{ result.test_cases }}</p> -->
+        {% endif %}
+    {% endif %}
+</div>
+    </div>
+        <script src="{{url_for('static', filename='js/script.js')}}"></script>
+        <script>
+            var editor = CodeMirror(document.getElementById("codeEditor"), {
+            value: `{{ request.form.get('code_snippet', '') }}`,
+            mode: "javascript", // Change to the appropriate mode for your code
+            lineNumbers: true,
+            theme: "dracula", // You can change this to other themes like "monokai", "dracula", etc.
+            lineWrapping: true,
+            viewportMargin: Infinity,
+            styleActiveLine: true, // Optional: highlight the active line
+            lineHeight: 1.5, // Optional: adjust line height for better readability
+        });
+
+            // Set the background color to match bg-gray-800
+            editor.getWrapperElement().style.backgroundColor = '#2D3748';  
+            editor.getWrapperElement().style.color = 'white'; 
+            editor.getWrapperElement().style.height = 'screen'; 
+            // Set the background color of the line numbers to match the editor's background
+            var lineNumberWrapper = editor.getWrapperElement().getElementsByClassName   ('CodeMirror-gutter')[0];
+            lineNumberWrapper.style.backgroundColor = '#2D3748'; // Match the editor's background
+            lineNumberWrapper.style.color = 'white'; // Set line number color to white  
+        </script>
+</body>
+</html>
+
