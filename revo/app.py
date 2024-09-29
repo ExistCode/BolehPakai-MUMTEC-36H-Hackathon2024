@@ -6,6 +6,11 @@ import pandas as pd
 
 app = Flask(__name__)
 
+def remove_language_markers(text):
+    # Remove code block language markers such as ```python``` or ```javascript```
+    cleaned_text = re.sub(r'```[a-zA-Z]+\n', '', text)
+    return cleaned_text
+
 def mask_sensitive_data(text):
     # Mask potential sensitive data in the code snippet
     text = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '[EMAIL]', text)
@@ -35,11 +40,16 @@ def analyze_code_with_openai(code_snippet):
 
         # Extract the content from the response
         analysis_result = completion.choices[0].message.content
+        print(analysis_result)
 
-        # Parse the analysis result into a dictionary
+        # Clean the text before processing
+        analysis_result = remove_language_markers(analysis_result)
+
+        # Continue with the rest of your code processing
         result_dict = {}
-        pattern = r'-(.*?)\:\s(.*?)\n'
+        pattern = r'-(.*?)\:\s(.*?)(?=\n-\s|$)'  # Modified pattern
         matches = re.findall(pattern, analysis_result, re.DOTALL)
+
         for match in matches:
             key = match[0].strip().lower().replace(' ', '_')
             value = match[1].strip()

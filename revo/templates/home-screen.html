@@ -38,21 +38,21 @@
         }
     </style>
 </head>
-<body class="text-white">
+<body class="text-white bg-gray-900 p-5">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-1/8 bg-gray-900 p-6 flex items-start justify-center">
+        <div class="w-1/8 bg-gray-800 mr-4 p-6 flex items-start justify-center rounded-xl">
             <!-- Update the image source -->
         <img src="{{ url_for('static', filename='images/logo.png') }}" class="h-12" alt="Logo">
         </div>
 
          <!-- Code Input Area -->
-        <div class="flex-1 flex flex-col relative">
-            <div class="bg-gray-800 p-8">
+        <div class="flex-1 flex flex-col relative mr-4">
+            <div class="bg-gray-800 p-8 rounded-t-xl">
                 <h2 class="text-xl font-bold">Editor</h2>
             </div>
             <form method="post" class="flex-1 flex flex-col">
-                 <div id="codeEditor" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none"></div>
+                 <div id="codeEditor" class="flex-1 w-full bg-gray-800 text-white px-8 py-4 border-none rounded-b-xl"></div>
                 <textarea name="code_snippet" id="codeSnippetInput" style="display:none;">{{ request.form.get('code_snippet', '') }}</textarea>
                 <!-- Button -->
                <!-- <button type="submit" class="bg-gradient-to-r from-white to-white-10 text-white p-2 rounded absolute ">Analyze Code</button> -->
@@ -64,7 +64,7 @@
         </div>
 
         <!-- Issues and Suggestions Area -->
-       <div class="flex-1 flex flex-col p-4 bg-gray-800 border-left border-gray-900 border-60">
+       <div class="flex-1 flex flex-col p-4 bg-gray-800 rounded-xl">
         {% if result %}
             {% if result.error %}
                 <div class="bg-red-500 p-4 rounded mb-6">{{ result.error }}</div>
@@ -80,6 +80,7 @@
                         <h3 class="font-bold text-sm mb-2">Issue</h3>
                         <p class="text-sm"><strong>Issue Type:</strong> {{ result.issue_type }}</p>
                         <p class="text-sm"><strong>Description:</strong> {{ result.description }}</p>
+                        <div id="inefficient-code" data-inefficient-code="{{ result.inefficient_code if result.inefficient_code else '' | safe }}"></div>
                     </div>
                 </div>
         
@@ -91,7 +92,7 @@
                 <button onclick="copyToClipboard()" class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm hover:bg-gray-600">Copy code</button>
             </div>
             <div class="bg-gray-900 p-4 overflow-x-auto">
-                <pre><code class="language-cpp text-sm">{{ result.optimzed_code }}</code></pre>
+                <pre><code class="language-cpp text-sm">{{ result.optimized_code }}</code></pre>
             </div>
         </div>
         
@@ -111,7 +112,7 @@
         
         <!-- Strong for Security Impact, Edge Cases, and Implementation Notes -->
         <div class="mt-4">
-            <p class="text-sm"><strong>Safety/Security Impact:</strong> <span class="font-bold">{{ result.safety_security_impact }}</span></p>
+            <p class="text-sm"><strong>Safety/Security Impact:</strong> <span class="font-bold">{{ result.impact }}</span></p>
             <!-- <p class="text-sm"><strong>Edge Cases:</strong> <span class="font-bold">{{ result.edge_cases }}</span></p> -->
             <p class="text-sm"><strong>Implementation Notes:</strong> <span class="font-bold">{{ result.implementation_notes }}</span></p>
         </div>
@@ -144,6 +145,36 @@
             var lineNumberWrapper = editor.getWrapperElement().getElementsByClassName   ('CodeMirror-gutter')[0];
             lineNumberWrapper.style.backgroundColor = '#2D3748'; // Match the editor's background
             lineNumberWrapper.style.color = 'white'; // Set line number color to white  
+
+            var inefficientCode = document.getElementById('inefficient-code').getAttribute('data-inefficient-code');
+
+// Check if there is an inefficient code snippet to highlight
+if (inefficientCode) {
+    // Find the inefficient code in the editor's content
+    var editorContent = editor.getValue();
+    var index = editorContent.indexOf(inefficientCode);
+
+    if (index !== -1) {
+        // Calculate the start and end positions for the inefficient code snippet
+        var start = editor.posFromIndex(index);
+        var end = editor.posFromIndex(index + inefficientCode.length);
+
+        // Highlight the inefficient code snippet
+        editor.markText(start, end, {
+            className: 'highlight-issue',
+            title: 'This code is inefficient'
+        });
+    }
+}
+
+// Add a custom style for highlighting
+var style = document.createElement('style');
+style.innerHTML = `
+    .highlight-issue {
+        background-color: rgba(255, 69, 0, 0.5); /* Highlight with a semi-transparent orange color */
+    }
+`;
+document.head.appendChild(style);
         </script>
 </body>
 </html>
